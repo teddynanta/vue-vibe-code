@@ -1,3 +1,22 @@
+<script lang="ts">
+import { ref } from 'vue';
+
+
+const title = ref('');
+const emit = defineEmits<{
+  (event: 'add-task', title: string): void;
+}>()
+
+const submit = () => {
+  if (!title.value.trim()) return
+  emit('add-task', title.value)
+  title.value = ''
+}
+</script>
 <template>
-  <h1>this is taskform</h1>
+  <form @submit.prevent="submit">
+    <input type="text" placeholder="add a task" v-model="title">
+    <button>Add</button>
+  </form>
+
 </template>
