@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Task } from '@/types/task'
-import { ref } from 'vue';
 
 
 const emit = defineEmits<{
