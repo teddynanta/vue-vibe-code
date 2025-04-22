@@ -15,14 +15,22 @@ const addTask = (title: string) => {
   tasks.value.push(newTask)
 }
 
+const toggleDone = (id: number) => {
+  const task = tasks.value.find(task => task.id === id)
+  if (task){
+    task.isDone = !task.isDone
+  }
+}
+console.log('task', tasks.value)
+
 </script>
 
 <template>
   <div>
     <main class="container">
       <h1>Vue Task Tracker</h1>
-      <TaskForm @add-task="addTask" />
-      <TaskList />
+      <TaskForm @add-task="addTask" @toggle-done="toggleDone"/>
+      <TaskList :tasks="tasks" />
     </main>
   </div>
 </template>
