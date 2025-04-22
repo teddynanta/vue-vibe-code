@@ -15,9 +15,16 @@ defineProps<{
 <template>
   <div>
 
-    <span>
+    <span :class="{done : task.isDone}">
       <input type="checkbox" id="checkbox" :checked="task.isDone" @change="emit('toggle-done', task.id)">
       {{ task.title }}
     </span>
   </div>
 </template>
+
+<style>
+.done {
+  text-decoration: line-through;
+  color: gray;;
+}
+</style>
