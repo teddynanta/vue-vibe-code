@@ -12,11 +12,16 @@ const submit = () => {
   emit('add-task', title.value)
   title.value = ''
 }
+
+function cancel() {
+  title.value = ''
+}
 </script>
 <template>
   <form @submit.prevent="submit">
     <input type="text" placeholder="add a task" v-model="title">
     <button>Add</button>
+    <button @click.prevent="cancel">cancel</button>
   </form>
 
 </template>

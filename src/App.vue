@@ -48,6 +48,20 @@ const deleteTask = (id: number) => {
   }
 }
 
+const editTask = (id: number, title: string) => {
+  const editedTask = tasks.value.find(task => task.id === id)
+  if (editedTask){
+    editedTask.title = title
+  }
+}
+
+// const editTask = (id: number, title: string) => {
+//   const editedTask = tasks.value.find(task => task.id === id)
+//   if (editedTask) {
+//     editedTask.title = title
+//   }
+// }
+
 const filteredTasks = computed(() => {
   if (filter.value === 'all') {
     return tasks.value
@@ -75,7 +89,7 @@ const filteredTasks = computed(() => {
       <input type="radio" id="active" value="active" v-model="filter" />
       <label for="active">active</label>
 
-      <TaskList :tasks="filteredTasks" @toggle-done="toggleDone"  @delete-task="deleteTask"/>
+      <TaskList :tasks="filteredTasks" @toggle-done="toggleDone"  @delete-task="deleteTask" @edit-task="editTask"/>
     </main>
   </div>
 </template>
