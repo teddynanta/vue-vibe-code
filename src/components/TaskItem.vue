@@ -8,7 +8,7 @@ import TaskList from './TaskList.vue';
 const emit = defineEmits<{
   (event: 'toggle-done', id: number): void
   (event: 'delete-task', id: number): void
-  (event: 'edit-task', title: string): void
+  (event: 'edit-task', id: number, title: string): void
 }>()
 
 const isEditing = ref(false)
@@ -20,11 +20,11 @@ function editTask(title: string) {
   console.log('isEditing', isEditing.value)
 } 
 
-function submitEdit() {
+function submitEdit(id: number) {
   if (!editTitle.value.trim()) return
-  emit('edit-task', editTitle.value)
-  isEditing.value = false
+  emit('edit-task', {id: id, title: editTitle.value})
   editTitle.value = ''
+  isEditing.value = false
 }
 
 defineProps<{
@@ -35,10 +35,11 @@ defineProps<{
 <template>
   <div>
     <span v-if="isEditing">
-      <form @submit.prevent="submitEdit"></form>
-      <input type="text" v-model="editTitle" placeholder="edit task" />
-      <button class="green" type="submit">save</button>
-      <button @click.prevent="editTask(task.title)" class="red">cancel</button>
+      <form @submit.prevent="submitEdit(task.id)">
+        <input type="text" v-model="editTitle" placeholder="edit task" />
+        <button class="green" type="submit">save</button>
+        <button @click.prevent="editTask" class="red">cancel</button>
+      </form>
     </span>
     <span v-else :class="{done : task.isDone}">
       <input type="checkbox" id="checkbox" :checked="task.isDone" @change="emit('toggle-done', task.id)">

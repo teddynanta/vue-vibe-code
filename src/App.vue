@@ -48,11 +48,12 @@ const deleteTask = (id: number) => {
   }
 }
 
-const editTask = (id: number, title: string) => {
-  const editedTask = tasks.value.find(task => task.id === id)
-  if (editedTask){
-    editedTask.title = title
-  }
+const editTask = (data) => {
+    const editedTask = tasks.value.find(task => task.id === data.id)
+    console.log('editedTask', data)
+    if (editedTask){
+      editedTask.title = data.title
+    }
 }
 
 // const editTask = (id: number, title: string) => {
