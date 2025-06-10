@@ -45,21 +45,66 @@
 </script>
 
 <template>
-  <div>
-    <span v-if="isEditing">
-      <form @submit.prevent="submitEdit(task.id)">
-        <input ref="inputRef" type="text" v-model="editTitle" placeholder="edit task" />
-        <button class="green" type="submit">save</button>
-        <button @click.prevent="editTask" class="red">cancel</button>
-      </form>
-    </span>
-    <span v-else :class="{ done: task.isDone }">
-      <input type="checkbox" id="checkbox" :checked="task.isDone" @change="emit('toggle-done', task.id)">
-      {{ task.title }}
+  <tr v-if="isEditing">
+    <td>//</td>
+    <td>
+      <input ref="inputRef" type="text" v-model="editTitle" placeholder="edit task" />
+    </td>
+    <td>
+      <span>{{ task.dueDate ? task.dueDate : 'No due date' }}</span>
+    </td>
+    <td>
+      <button @click.prevent="submitEdit(task.id)" class="green" type="submit">save</button>
+      <button @click.prevent="editTask(task.title)" class="red">cancel</button>
+    </td>
+  </tr>
+  <tr v-else :class="{ done: task.isDone }">
+    <td>
+      <input type="checkbox" :checked="task.isDone" @change="emit('toggle-done', task.id)">
+    </td>
+    <td>
+      <span>{{ task.title }}</span>
+    </td>
+    <td>
+      <span>{{ task.dueDate ? task.dueDate : 'No due date' }}</span>
+    </td>
+    <td>
       <FontAwesomeIcon @click="emit('delete-task', task.id)" :icon="fas.faTrash" class="red" />
       <FontAwesomeIcon @click="editTask(task.title)" :icon="fas.faPencil" class="yellow" />
-    </span>
-  </div>
+    </td>
+  </tr>
+  <!-- <tbody>
+        <tr>
+          <div v-if="isEditing">
+            <form @submit.prevent="submitEdit(task.id)">
+              <td>//</td>
+              <td>
+                <input ref="inputRef" type="text" v-model="editTitle" placeholder="edit task" />
+              </td>
+              <td>duedate</td>
+              <td>
+                <button class="green" type="submit">save</button>
+                <button @click.prevent="editTask" class="red">cancel</button>
+              </td>
+            </form>
+          </div>
+          <div v-else :class="{ done: task.isDone }">
+            <td>
+              <input type="checkbox" id="checkbox" :checked="task.isDone" @change="emit('toggle-done', task.id)">
+            </td>
+            <td>
+              <span>{{ task.title }}</span>
+            </td>
+            <td>
+              <span>{{ task.dueDate ? task.dueDate : 'No due date' }}</span>
+            </td>
+            <td>
+              <FontAwesomeIcon @click="emit('delete-task', task.id)" :icon="fas.faTrash" class="red" />
+              <FontAwesomeIcon @click="editTask(task.title)" :icon="fas.faPencil" class="yellow" />
+            </td>
+          </div>
+        </tr>
+      </tbody> -->
 </template>
 
 <style>
