@@ -79,19 +79,59 @@
 <template>
   <div>
     <main class="container">
-      <h1>Vue Task Tracker</h1>
+      <h1 class="text-center gradient-neon">Vue Task Tracker</h1>
       <TaskForm @add-task="addTask" />
       <h2>filter : {{ filter }}</h2>
-      <input type="radio" id="all" value="all" v-model="filter" />
-      <label for="all">all</label>
-
-      <input type="radio" id="completed" value="completed" v-model="filter" />
-      <label for="completed">completed</label>
-
-      <input type="radio" id="active" value="active" v-model="filter" />
-      <label for="active">active</label>
-
+      <div class="d-flex flex-row">
+        <div class="form-check me-3">
+          <input class="form-check-input" type="radio" name="all" id="all" value="all" v-model="filter">
+          <label class="form-check-label" for="all">
+            All
+          </label>
+        </div>
+        <div class="form-check me-3">
+          <input class="form-check-input" type="radio" name="completed" id="completed" value="completed"
+            v-model="filter">
+          <label class="form-check-label" for="completed">
+            Completed
+          </label>
+        </div>
+        <div class="form-check me-3">
+          <input class="form-check-input" type="radio" name="active" id="active" value="active" v-model="filter">
+          <label class="form-check-label" for="active">
+            Active
+          </label>
+        </div>
+      </div>
       <TaskList :tasks="filteredTasks" @toggle-done="toggleDone" @delete-task="deleteTask" @edit-task="editTask" />
     </main>
   </div>
 </template>
+
+<style>
+
+  /* Neon Cyberpunk */
+  .gradient-neon {
+    background: linear-gradient(90deg, #00d2ff, #3a7bd5, #ff0099, #00d2ff);
+    background-clip: text;
+    background-size: 150% 150%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+    animation: gradientShift 4s ease-in-out infinite;
+  }
+
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+</style>
