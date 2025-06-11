@@ -34,9 +34,9 @@
       alert('Title cannot be empty')
       return
     }
-    emit('edit-task', { id: id, title: editTitle.value })
+    emit('edit-task', id, editTitle.value)
     editTitle.value = ''
-    isEditing.value = false
+    isEditing.value = !isEditing.value
   }
 
   defineProps<{
@@ -70,7 +70,7 @@
     </td>
     <td v-if="task.isDone">
       <FontAwesomeIcon @click="emit('delete-task', task.id)" :icon="fas.faTrash" class="red" />
-      <FontAwesomeIcon :icon="fas.faCheck" class="green" />
+      <FontAwesomeIcon :icon="fas.faCheck" class="green cursor-default" />
     </td>
     <td v-else>
       <FontAwesomeIcon @click="emit('delete-task', task.id)" :icon="fas.faTrash" class="red" />
@@ -83,6 +83,10 @@
   .done span {
     text-decoration: line-through;
     color: grey !important;
+  }
+
+  .cursor-default {
+    cursor: default !important;
   }
 
   .red {
@@ -102,7 +106,7 @@
     border: none;
     padding: 5px;
     border-radius: 5px;
-    cursor: default !important;
+    cursor: pointer;
     margin-left: 10px;
     /* margin-top: 5px; */
   }

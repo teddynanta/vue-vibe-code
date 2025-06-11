@@ -7,12 +7,12 @@
   const tasks = ref<Task[]>([]);
   const filter = ref<'active' | 'completed' | 'all'>('all');
 
-  const addTask = (title: string) => {
+  const addTask = (title: string, dueDate: string) => {
     const newTask: Task = {
       id: Date.now(),
-      title: title['title'],
+      title,
       isDone: false,
-      dueDate: title['dueDate'],
+      dueDate,
     }
     tasks.value.push(newTask)
   }
@@ -49,20 +49,13 @@
     }
   }
 
-  const editTask = (data) => {
-    const editedTask = tasks.value.find(task => task.id === data.id)
-    console.log('editedTask', data)
+  const editTask = (id: number, title: string) => {
+    const editedTask = tasks.value.find(task => task.id === id)
+    console.log('editedTask', title)
     if (editedTask) {
-      editedTask.title = data.title
+      editedTask.title = title
     }
   }
-
-  // const editTask = (id: number, title: string) => {
-  //   const editedTask = tasks.value.find(task => task.id === id)
-  //   if (editedTask) {
-  //     editedTask.title = title
-  //   }
-  // }
 
   const filteredTasks = computed(() => {
     if (filter.value === 'all') {
@@ -109,6 +102,9 @@
 </template>
 
 <style>
+  main {
+    margin-bottom: 100% !important;
+  }
 
   /* Neon Cyberpunk */
   .gradient-neon {

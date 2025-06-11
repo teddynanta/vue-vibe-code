@@ -13,7 +13,7 @@
       alert('Title and due date cannot be empty')
       return
     }
-    emit('add-task', { title: title.value, dueDate: dueDate.value })
+    emit('add-task', title.value, dueDate.value)
     title.value = ''
     dueDate.value = ''
   }
