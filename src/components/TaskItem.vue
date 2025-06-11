@@ -1,47 +1,47 @@
 <script setup lang="ts">
-  import type { Task } from '@/types/task'
+  import type { Task } from '@/types/task';
   import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
   import { fas } from '@fortawesome/free-solid-svg-icons';
   import { nextTick, ref, watch } from 'vue';
 
 
-  const inputRef = ref<HTMLInputElement | null>(null)
+  const inputRef = ref<HTMLInputElement | null>(null);
 
-  const isEditing = ref(false)
-  const editTitle = ref('')
+  const isEditing = ref(false);
+  const editTitle = ref('');
+
+  const props = defineProps<{ task: Task }>();
 
   watch(isEditing, async (val) => {
     if (val) {
       await nextTick()
       inputRef.value?.focus()
     }
-  })
+  });
   const emit = defineEmits<{
     (event: 'toggle-done', id: number): void
     (event: 'delete-task', id: number): void
     (event: 'edit-task', id: number, title: string): void
-  }>()
+  }>();
 
 
   function editTask(title: string) {
     isEditing.value = !isEditing.value
     editTitle.value = title
     console.log('isEditing', isEditing.value)
-  }
+  };
 
   function submitEdit(id: number) {
     if (!editTitle.value.trim()) {
       alert('Title cannot be empty')
       return
-    }
+    };
     emit('edit-task', id, editTitle.value)
     editTitle.value = ''
     isEditing.value = !isEditing.value
-  }
+  };
 
-  defineProps<{
-    task: Task
-  }>()
+
 </script>
 
 <template>
@@ -66,7 +66,11 @@
       <input type="checkbox" :checked="task.isDone" @change="emit('toggle-done', task.id)">
     </td>
     <td>
-      <span>{{ task.title }}</span>
+      <span class="me-1 fs-5 fw-normal">{{ task.title }}</span>
+      <span class="badge rounded-pill fw-medium"
+        :class="{ 'text-bg-info': task.priority == 'low', 'text-bg-warning': task.priority == 'medium', 'text-bg-danger': task.priority == 'high', 'text-bg-secondary': task.priority == null }">
+        {{ task.priority ? task.priority : 'Not classified yet.' }}
+      </span>
     </td>
     <td>
       <span>{{ task.dueDate ? task.dueDate : 'No due date' }}</span>
