@@ -3,4 +3,5 @@ export type Task = {
     title: string,
     isDone: boolean,
     dueDate: string | null,
+    completedAt: string | null,
   }

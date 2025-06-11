@@ -54,6 +54,9 @@
       <span>{{ task.dueDate ? task.dueDate : 'No due date' }}</span>
     </td>
     <td>
+      <span>{{ task.completedAt ? task.completedAt : 'Not completed yet.' }}</span>
+    </td>
+    <td>
       <button @click.prevent="submitEdit(task.id)" class="green" type="submit">save</button>
       <button @click.prevent="editTask(task.title)" class="red">cancel</button>
     </td>
@@ -67,6 +70,9 @@
     </td>
     <td>
       <span>{{ task.dueDate ? task.dueDate : 'No due date' }}</span>
+    </td>
+    <td>
+      <span>{{ task.completedAt ? task.completedAt : 'Not completed yet.' }}</span>
     </td>
     <td v-if="task.isDone">
       <FontAwesomeIcon @click="emit('delete-task', task.id)" :icon="fas.faTrash" class="red" />

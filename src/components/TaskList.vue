@@ -22,6 +22,7 @@
         <td>//</td>
         <td>Title</td>
         <td>Due Date</td>
+        <td>Completed At</td>
         <td>Action</td>
       </tr>
     </thead>

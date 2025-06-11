@@ -6,6 +6,7 @@
 
   const tasks = ref<Task[]>([]);
   const filter = ref<'active' | 'completed' | 'all'>('all');
+  const date = new Date();
 
   const addTask = (title: string, dueDate: string) => {
     const newTask: Task = {
@@ -13,6 +14,7 @@
       title,
       isDone: false,
       dueDate,
+      completedAt: null,
     }
     tasks.value.push(newTask)
   }
@@ -36,8 +38,12 @@
 
   const toggleDone = (id: number) => {
     const task = tasks.value.find(task => task.id === id)
-    if (task) {
+    if (task && task.completedAt != null) {
       task.isDone = !task.isDone
+      task.completedAt = null
+    } else if (task && task.completedAt == null) {
+      task.isDone = !task.isDone
+      task.completedAt = date.toLocaleDateString()
     }
   }
 
