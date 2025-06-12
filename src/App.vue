@@ -7,6 +7,20 @@
   const tasks = ref<Task[]>([]);
   const filter = ref<'active' | 'completed' | 'all'>('all');
   const date = new Date();
+  const sortBy = ref<'dueDate' | 'priority'>('dueDate');
+  const priorityOrder = { high: 3, medium: 2, low: 1 };
+
+  const sortedTask = computed(() => {
+    if (sortBy.value == 'dueDate') {
+      return [...filteredTasks.value].sort((a, b) => {
+        return new Date(a.dueDate ?? '').getTime() - new Date(b.dueDate ?? '').getTime();
+      });
+    } else if (sortBy.value == 'priority') {
+      return [...filteredTasks.value].sort((a, b) => {
+        return priorityOrder[a.priority] - priorityOrder[b.priority];
+      });
+    };
+  });
 
   const addTask = (title: string, dueDate: string, priority: 'low' | 'medium' | 'high') => {
     const newTask: Task = {
@@ -103,6 +117,10 @@
           </label>
         </div>
       </div>
+      <select name="sortBy" id="sortBy" v-model="sortBy">
+        <option value="dueDate">Due Date</option>
+        <option value="priority">Priority</option>
+      </select>
       <TaskList :tasks="filteredTasks" @toggle-done="toggleDone" @delete-task="deleteTask" @edit-task="editTask" />
     </main>
   </div>
