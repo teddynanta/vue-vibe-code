@@ -7,19 +7,27 @@
   const tasks = ref<Task[]>([]);
   const filter = ref<'active' | 'completed' | 'all'>('all');
   const date = new Date();
-  const sortBy = ref<'dueDate' | 'priority'>('dueDate');
-  const priorityOrder = { high: 3, medium: 2, low: 1 };
+  const sortBy = ref<'dueDate' | 'priority' | null>(null);
+  const sortOrder = ref<'asc' | 'desc'>('asc');
+  const priorityOrder = { high: 3, medium: 2, low: 1, null: 0 };
+
+  const handleSort = (key: 'dueDate' | 'priority', order: 'asc' | 'desc') => {
+    sortBy.value = key;
+    sortOrder.value = order;
+  }
 
   const sortedTask = computed(() => {
+    let task = [...filteredTasks.value];
     if (sortBy.value == 'dueDate') {
-      return [...filteredTasks.value].sort((a, b) => {
-        return new Date(a.dueDate ?? '').getTime() - new Date(b.dueDate ?? '').getTime();
+      return task.sort((a, b) => {
+        return sortOrder.value == 'asc' ? new Date(a.dueDate ?? '').getTime() - new Date(b.dueDate ?? '').getTime() : new Date(b.dueDate ?? '').getTime() - new Date(a.dueDate ?? '').getTime();
       });
     } else if (sortBy.value == 'priority') {
-      return [...filteredTasks.value].sort((a, b) => {
-        return priorityOrder[a.priority] - priorityOrder[b.priority];
+      return task.sort((a, b) => {
+        return sortOrder.value == 'asc' ? priorityOrder[b.priority] - priorityOrder[a.priority] : priorityOrder[a.priority] - priorityOrder[b.priority];
       });
-    };
+    }
+    return task;
   });
 
   const addTask = (title: string, dueDate: string, priority: 'low' | 'medium' | 'high') => {
@@ -88,6 +96,7 @@
     };
   });
 
+
 </script>
 
 <template>
@@ -117,11 +126,8 @@
           </label>
         </div>
       </div>
-      <select name="sortBy" id="sortBy" v-model="sortBy">
-        <option value="dueDate">Due Date</option>
-        <option value="priority">Priority</option>
-      </select>
-      <TaskList :tasks="filteredTasks" @toggle-done="toggleDone" @delete-task="deleteTask" @edit-task="editTask" />
+      <TaskList :tasks="sortedTask" @toggle-done="toggleDone" @delete-task="deleteTask" @edit-task="editTask"
+        @sort-by="handleSort" />
     </main>
   </div>
 </template>
