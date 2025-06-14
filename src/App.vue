@@ -82,7 +82,7 @@
   const deleteTask = (id: number) => {
     const index = tasks.value.findIndex(task => task.id === id);
 
-    if (index !== -1 && confirm("Are you sure?")) {
+    if (index !== -1 && confirm(`Are you sure to delete Records with id: ${id}?`)) {
       tasks.value.splice(index, 1);
     };
   };
