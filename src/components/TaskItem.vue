@@ -9,36 +9,41 @@
 
   const isEditing = ref(false);
   const editTitle = ref('');
-
   const props = defineProps<{ task: Task }>();
+  const priority = ref<'low' | 'medium' | 'high'>(props.task.priority);
+  const editDueDate = ref(formatDateToInput(props.task.dueDate));
+
+  // Helper to format date string into YYYY-MM-DD
+  function formatDateToInput(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
 
   watch(isEditing, async (val) => {
     if (val) {
       await nextTick()
-      inputRef.value?.focus()
-    }
+      inputRef.value?.focus();
+    };
   });
   const emit = defineEmits<{
-    (event: 'toggle-done', id: number): void
-    (event: 'delete-task', id: number): void
-    (event: 'edit-task', id: number, title: string): void
+    (event: 'toggle-done', id: number): void;
+    (event: 'delete-task', id: number): void;
+    (event: 'edit-task', id: number, title: string, priority: 'low' | 'medium' | 'high', date: Date): void;
   }>();
 
-
   function editTask(title: string) {
-    isEditing.value = !isEditing.value
-    editTitle.value = title
-    console.log('isEditing', isEditing.value)
+    isEditing.value = !isEditing.value;
+    editTitle.value = title;
+    console.log('isEditing', isEditing.value);
   };
 
   function submitEdit(id: number) {
     if (!editTitle.value.trim()) {
-      alert('Title cannot be empty')
-      return
+      alert('Title cannot be empty');
+      return;
     };
-    emit('edit-task', id, editTitle.value)
-    editTitle.value = ''
-    isEditing.value = !isEditing.value
+    emit('edit-task', id, editTitle.value, priority.value, new Date(editDueDate.value))
+    editTitle.value = '';
+    isEditing.value = !isEditing.value;
   };
 
 
@@ -48,10 +53,23 @@
   <tr v-if="isEditing">
     <td>//</td>
     <td>
-      <input ref="inputRef" type="text" v-model="editTitle" placeholder="edit task" />
+      <input class="d-block form-control" ref="inputRef" type="text" v-model="editTitle" placeholder="edit task" />
+      <p class="d-inline fw-light fst-italic">priority: </p>
+      <input class="form-check-input ms-2" type="radio" name="low" id="low" value="low" v-model="priority">
+      <label class="form-check-label ms-2" for="low">
+        low
+      </label>
+      <input class="form-check-input ms-2" type="radio" name="medium" id="medium" value="medium" v-model="priority">
+      <label class="form-check-label ms-2" for="medium">
+        medium
+      </label>
+      <input class="form-check-input ms-2" type="radio" name="high" id="high" value="high" v-model="priority">
+      <label class="form-check-label ms-2" for="high">
+        high
+      </label>
     </td>
     <td>
-      <span>{{ task.dueDate ? task.dueDate : 'No due date' }}</span>
+      <input type="date" class="form-control" id="dueDate" v-model="editDueDate">
     </td>
     <td>
       <span>{{ task.completedAt ? task.completedAt : 'Not completed yet.' }}</span>

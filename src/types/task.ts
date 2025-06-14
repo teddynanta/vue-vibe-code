@@ -2,7 +2,7 @@ export type Task = {
     id: number,
     title: string,
     isDone: boolean,
-    dueDate: string | null,
+    dueDate: Date,
     completedAt: string | null,
     priority: 'low' | 'medium' | 'high',
   };

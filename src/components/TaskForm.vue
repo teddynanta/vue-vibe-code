@@ -3,26 +3,26 @@
 
 
   const title = ref('');
-  const dueDate = ref('');
+  const dueDate = ref<Date>();
   const priority = ref<'low' | 'medium' | 'high'>('low');
   const emit = defineEmits<{
-    (event: 'add-task', title: string, dueDate: string, priority: 'low' | 'medium' | 'high'): void;
+    (event: 'add-task', title: string, dueDate: Date, priority: 'low' | 'medium' | 'high'): void;
   }>();
 
   const submit = () => {
-    if (!title.value.trim() || !dueDate.value.trim()) {
+    if (!title.value.trim() || !dueDate.value) {
       alert('Title and due date cannot be empty')
       return
     };
     emit('add-task', title.value, dueDate.value, priority.value)
     title.value = ''
-    dueDate.value = ''
+    dueDate.value = new Date();
     priority.value = 'low'
   };
 
   function cancel() {
     title.value = ''
-    dueDate.value = ''
+    dueDate.value = new Date();
     priority.value = 'low'
   };
 </script>

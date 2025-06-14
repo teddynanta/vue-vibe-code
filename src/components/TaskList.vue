@@ -25,7 +25,7 @@
   const emit = defineEmits<{
     (event: 'toggle-done', id: number): void
     (event: 'delete-task', id: number): void
-    (event: 'edit-task', id: number, title: string): void
+    (event: 'edit-task', id: number, title: string, priority: 'low' | 'medium' | 'high', date: Date): void
     (event: 'sort-by', key: 'dueDate' | 'priority', order: 'asc' | 'desc'): void
   }>();
 
@@ -49,9 +49,15 @@
         <td scope="col">Action</td>
       </tr>
     </thead>
-    <tbody class="table-group-divider">
+    <tbody v-if="tasks.length > 0" class="table-group-divider">
       <TaskItem v-for="task in tasks" :key="task.id" :task="task" @toggle-done="emit('toggle-done', $event)"
-        @delete-task="emit('delete-task', $event)" @edit-task="(id, title) => emit('edit-task', id, title)" />
+        @delete-task="emit('delete-task', $event)"
+        @edit-task="(id, title, priority, date) => emit('edit-task', id, title, priority, date)" />
+    </tbody>
+    <tbody v-else>
+      <tr>
+        <td colspan="100%" class="text-center mt-5 fs-5 fst-italic"> No records. </td>
+      </tr>
     </tbody>
   </table>
 </template>
