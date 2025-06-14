@@ -13,9 +13,8 @@
   const priority = ref<'low' | 'medium' | 'high'>(props.task.priority);
   const editDueDate = ref(formatDateToInput(props.task.dueDate));
 
-  // Helper to format date string into YYYY-MM-DD
   function formatDateToInput(date: Date): string {
-    return date.toISOString().split('T')[0];
+    return new Date(date).toISOString().split('T')[0];
   }
 
   watch(isEditing, async (val) => {
@@ -91,7 +90,7 @@
       </span>
     </td>
     <td>
-      <span>{{ task.dueDate ? task.dueDate : 'No due date' }}</span>
+      <span>{{ task.dueDate ? task.dueDate.toLocaleDateString() : 'No due date' }}</span>
     </td>
     <td>
       <span>{{ task.completedAt ? task.completedAt : 'Not completed yet.' }}</span>

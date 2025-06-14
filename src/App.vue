@@ -12,8 +12,6 @@
   const sortBy = ref<'dueDate' | 'priority' | null>(null);
   const sortOrder = ref<'asc' | 'desc'>('asc');
   const priorityOrder = { high: 3, medium: 2, low: 1, null: 0 };
-  const formatter = new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  const formattedDateTime = formatter.format(date);
 
   const handleSort = (key: 'dueDate' | 'priority', order: 'asc' | 'desc') => {
     sortBy.value = key;
@@ -24,11 +22,15 @@
     let task = [...filteredTasks.value];
     if (sortBy.value == 'dueDate') {
       return task.sort((a, b) => {
-        return sortOrder.value == 'asc' ? new Date(a.dueDate ?? '').getTime() - new Date(b.dueDate ?? '').getTime() : new Date(b.dueDate ?? '').getTime() - new Date(a.dueDate ?? '').getTime();
+        const aDate = a.dueDate.getTime();
+        const bDate = b.dueDate.getTime();
+        return sortOrder.value == 'asc' ? aDate - bDate : bDate - aDate;
       });
     } else if (sortBy.value == 'priority') {
       return task.sort((a, b) => {
-        return sortOrder.value == 'asc' ? priorityOrder[b.priority] - priorityOrder[a.priority] : priorityOrder[a.priority] - priorityOrder[b.priority];
+        const priorityA = priorityOrder[a.priority];
+        const priorityB = priorityOrder[b.priority];
+        return sortOrder.value == 'asc' ? priorityB - priorityA : priorityA - priorityB;
       });
     }
     return task;
@@ -50,10 +52,10 @@
     try {
       const storedTasks = localStorage.getItem('vue-tasks')
       if (storedTasks) {
-        tasks.value = JSON.parse(storedTasks).map((task: Task[]) => ({
+        tasks.value = JSON.parse(storedTasks).map((task: Task) => ({
           ...task,
-          dueDate: new Date(task.dueDate)
-        })) as Task[];
+          dueDate: new Date(task.dueDate),
+        }));
       };
     } catch (error) {
       console.error('Error parsing tasks from localStorage:', error);
@@ -73,7 +75,7 @@
       task.completedAt = null;
     } else if (task && task.completedAt == null) {
       task.isDone = !task.isDone;
-      task.completedAt = formattedDateTime;
+      task.completedAt = date.toLocaleString();
     };
   };
 
@@ -115,6 +117,9 @@
     searchQuery.value = query;
   };
 
+  const totalRecords = computed(() => {
+    return filteredTasks.value.length;
+  })
   console.log(tasks.value);
 
 </script>
@@ -128,6 +133,9 @@
       <TaskFilter @filter-button="handleFilter" @search-query="handleSearch" />
       <TaskList :tasks="sortedTask" @toggle-done="toggleDone" @delete-task="deleteTask" @edit-task="editTask"
         @sort-by="handleSort" />
+      <p v-if="filteredTasks.length > 0" class="fs-6 fst-italic text-secondary">Total records found: <span
+          class="fw-semibold">{{ totalRecords }}
+          Records</span></p>
     </main>
   </div>
 </template>

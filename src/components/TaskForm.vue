@@ -11,19 +11,19 @@
 
   const submit = () => {
     if (!title.value.trim() || !dueDate.value) {
-      alert('Title and due date cannot be empty')
-      return
+      alert('Title and due date cannot be empty');
+      return;
     };
-    emit('add-task', title.value, dueDate.value, priority.value)
-    title.value = ''
+    emit('add-task', title.value, new Date(dueDate.value), priority.value)
+    title.value = '';
     dueDate.value = new Date();
-    priority.value = 'low'
+    priority.value = 'low';
   };
 
   function cancel() {
-    title.value = ''
+    title.value = '';
     dueDate.value = new Date();
-    priority.value = 'low'
+    priority.value = 'low';
   };
 </script>
 <template>

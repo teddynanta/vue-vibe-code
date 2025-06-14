@@ -37,7 +37,6 @@
     </div>
   </div>
   <div class="mb-2 w-25">
-    <label for="search" class="form-label">Task Name</label>
     <input type="text" class="form-control" id="search" v-model="searchQuery" placeholder="search a task...">
   </div>
 
