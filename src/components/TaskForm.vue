@@ -42,7 +42,8 @@
       <div class="mb-2">
         <label for="addpriority" class="form-label">Priority</label>
         <select class="form-select" v-model="priority" id="addpriority">
-          <option v-for="option in PRIORITY_OPTIONS" :key="option" :value="option">{{ option }}</option>
+          <option v-for="option in PRIORITY_OPTIONS" :key="option" :value="option">{{ option.charAt(0).toUpperCase() +
+            option.slice(1) }}</option>
         </select>
       </div>
       <button type="submit" class="btn btn-primary me-2">Submit</button>
