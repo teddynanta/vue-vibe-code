@@ -2,6 +2,7 @@
   import type { Task } from '@/types/task';
   import TaskItem from './TaskItem.vue';
   import { ref } from 'vue';
+  import { type Priority } from '@/constants/PriorityMap';
 
   const props = defineProps<{
     tasks: Task[]
@@ -25,7 +26,7 @@
   const emit = defineEmits<{
     (event: 'toggle-done', id: number): void
     (event: 'delete-task', id: number): void
-    (event: 'edit-task', id: number, title: string, priority: 'low' | 'medium' | 'high', date: Date): void
+    (event: 'edit-task', id: number, title: string, priority: Priority, date: Date): void
     (event: 'sort-by', key: 'dueDate' | 'priority', order: 'asc' | 'desc'): void
   }>();
 

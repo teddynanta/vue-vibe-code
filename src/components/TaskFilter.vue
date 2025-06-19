@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import { ref, watch } from 'vue';
+  import { type Filter } from '@/constants/FilterTypes';
 
-  const filter = ref<'all' | 'completed' | 'active'>('all');
+  const filter = ref<Filter>('all');
   const searchQuery = ref<string>('');
 
   watch([filter, searchQuery], ([value, query]) => {
@@ -10,7 +11,7 @@
   })
 
   const emit = defineEmits<{
-    (event: 'filter-button', value: 'all' | 'completed' | 'active'): void
+    (event: 'filter-button', value: Filter): void
     (event: 'search-query', query: string): void
   }>();
 </script>

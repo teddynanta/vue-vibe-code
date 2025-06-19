@@ -1,12 +1,14 @@
 <script setup lang="ts">
   import { ref } from 'vue';
+  import { PRIORITY_OPTIONS, type Priority } from '@/constants/PriorityMap';
 
 
   const title = ref('');
   const dueDate = ref<Date>();
-  const priority = ref<'low' | 'medium' | 'high'>('low');
+  const priority = ref<Priority>('low');
+
   const emit = defineEmits<{
-    (event: 'add-task', title: string, dueDate: Date, priority: 'low' | 'medium' | 'high'): void;
+    (event: 'add-task', title: string, dueDate: Date, priority: Priority): void;
   }>();
 
   const submit = () => {
@@ -40,9 +42,7 @@
       <div class="mb-2">
         <label for="addpriority" class="form-label">Priority</label>
         <select class="form-select" v-model="priority" id="addpriority">
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
+          <option v-for="option in PRIORITY_OPTIONS" :key="option" :value="option">{{ option }}</option>
         </select>
       </div>
       <button type="submit" class="btn btn-primary me-2">Submit</button>

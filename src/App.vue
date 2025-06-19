@@ -4,14 +4,17 @@
   import TaskList from './components/TaskList.vue';
   import type { Task } from './types/task';
   import TaskFilter from './components/TaskFilter.vue';
+  import { PRIORITY_MAP } from './constants/PriorityMap';
+  import { type Priority } from "./constants/PriorityMap";
+  import { FILTER_TYPES } from './constants/FilterTypes';
+  import { type Filter } from "./constants/FilterTypes";
 
   const tasks = ref<Task[]>([]);
-  const filter = ref<'active' | 'completed' | 'all'>('all');
+  const filter = ref<Filter>('all');
   const searchQuery = ref<string>('');
   const date = new Date();
   const sortBy = ref<'dueDate' | 'priority' | null>(null);
   const sortOrder = ref<'asc' | 'desc'>('asc');
-  const priorityOrder = { high: 3, medium: 2, low: 1, null: 0 };
 
   const handleSort = (key: 'dueDate' | 'priority', order: 'asc' | 'desc') => {
     sortBy.value = key;
@@ -28,15 +31,15 @@
       });
     } else if (sortBy.value == 'priority') {
       return task.sort((a, b) => {
-        const priorityA = priorityOrder[a.priority];
-        const priorityB = priorityOrder[b.priority];
+        const priorityA = PRIORITY_MAP[a.priority];
+        const priorityB = PRIORITY_MAP[b.priority];
         return sortOrder.value == 'asc' ? priorityB - priorityA : priorityA - priorityB;
       });
     }
     return task;
   });
 
-  const addTask = (title: string, dueDate: Date, priority: 'low' | 'medium' | 'high') => {
+  const addTask = (title: string, dueDate: Date, priority: Priority) => {
     const newTask: Task = {
       id: Date.now(),
       title,
@@ -87,7 +90,7 @@
     };
   };
 
-  const editTask = (id: number, title: string, priority: 'low' | 'medium' | 'high', date: Date) => {
+  const editTask = (id: number, title: string, priority: Priority, date: Date) => {
     const editedTask = tasks.value.find(task => task.id === id);
     console.log('editedTask', title);
     if (editedTask) {
@@ -110,7 +113,7 @@
     });
   });
 
-  const handleFilter = (value: 'active' | 'completed' | 'all') => {
+  const handleFilter = (value: Filter) => {
     filter.value = value;
   };
   const handleSearch = (query: string) => {

@@ -3,6 +3,7 @@
   import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
   import { fas } from '@fortawesome/free-solid-svg-icons';
   import { nextTick, ref, watch } from 'vue';
+  import { PRIORITY_OPTIONS, type Priority } from '@/constants/PriorityMap';
 
 
   const inputRef = ref<HTMLInputElement | null>(null);
@@ -10,7 +11,7 @@
   const isEditing = ref(false);
   const editTitle = ref('');
   const props = defineProps<{ task: Task }>();
-  const priority = ref<'low' | 'medium' | 'high'>(props.task.priority);
+  const priority = ref<Priority>(props.task.priority);
   const editDueDate = ref(formatDateToInput(props.task.dueDate));
 
   function formatDateToInput(date: Date): string {
@@ -26,7 +27,7 @@
   const emit = defineEmits<{
     (event: 'toggle-done', id: number): void;
     (event: 'delete-task', id: number): void;
-    (event: 'edit-task', id: number, title: string, priority: 'low' | 'medium' | 'high', date: Date): void;
+    (event: 'edit-task', id: number, title: string, priority: Priority, date: Date): void;
   }>();
 
   function editTask(title: string) {
@@ -45,6 +46,12 @@
     isEditing.value = !isEditing.value;
   };
 
+  function cancel() {
+    isEditing.value = !isEditing.value;
+    editTitle.value = '';
+    priority.value = props.task.priority;
+  };
+
 
 </script>
 
@@ -54,18 +61,13 @@
     <td>
       <input class="d-block form-control" ref="inputRef" type="text" v-model="editTitle" placeholder="edit task" />
       <p class="d-inline fw-light fst-italic">priority: </p>
-      <input class="form-check-input ms-2" type="radio" name="low" id="low" value="low" v-model="priority">
-      <label class="form-check-label ms-2" for="low">
-        low
-      </label>
-      <input class="form-check-input ms-2" type="radio" name="medium" id="medium" value="medium" v-model="priority">
-      <label class="form-check-label ms-2" for="medium">
-        medium
-      </label>
-      <input class="form-check-input ms-2" type="radio" name="high" id="high" value="high" v-model="priority">
-      <label class="form-check-label ms-2" for="high">
-        high
-      </label>
+      <span v-for="option in PRIORITY_OPTIONS" :key="option">
+        <input class="form-check-input ms-2" type="radio" :id="option" :value="option" v-model="priority"
+          :name="'priority-group'">
+        <label class="form-check-label ms-2" :for="option">
+          {{ option }}
+        </label>
+      </span>
     </td>
     <td>
       <input type="date" class="form-control" id="dueDate" v-model="editDueDate">
@@ -75,7 +77,7 @@
     </td>
     <td>
       <button @click.prevent="submitEdit(task.id)" class="green" type="submit">save</button>
-      <button @click.prevent="editTask(task.title)" class="red">cancel</button>
+      <button @click.prevent="cancel" class="red">cancel</button>
     </td>
   </tr>
   <tr v-else :class="{ done: task.isDone }">
